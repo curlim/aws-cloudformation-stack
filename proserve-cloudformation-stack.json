@@ -1,0 +1,155 @@
+{
+    "typeName": "ProServe::CloudFormation::Stack",
+    "description": "Resource schema for cross-account stack deployments.",
+    "sourceUrl": "https://github.com/curlim/aws-cloudformation-stack.git",
+    "definitions": {
+        "Tag": {
+            "description": "A key-value pair to associate with a resource.",
+            "type": "object",
+            "properties": {
+                "Key": {
+                    "type": "string",
+                    "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+                    "minLength": 1,
+                    "maxLength": 128
+                },
+                "Value": {
+                    "type": "string",
+                    "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+                    "minLength": 0,
+                    "maxLength": 256
+                }
+            },
+            "required": [
+                "Key",
+                "Value"
+            ],
+            "additionalProperties": false
+        },
+        "Parameter": {
+            "type": "object",
+            "properties": {
+                "Key": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1000
+                },
+                "Value": {
+                    "type": "string",
+                    "maxLength": 4096
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "Key",
+                "Value"
+            ]
+        }
+    },
+    "properties": {
+        "AccountId": {
+            "type": "string",
+            "pattern": "^[0-9]{12}$"
+        },
+        "AssumeRolePath": {
+            "type": "string",
+            "pattern": "^\/.*\/$"
+        },
+        "AssumeRoleName": {
+            "type": "string"
+        },
+        "StackName": {
+            "type": "string"
+        },
+        "Capabilities": {
+            "type": "array",
+            "description": "Set the capability permissions for execution. Can be left out or contains one or more of the following Capabilities: https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.html#API_CreateStack_RequestParameters",
+            "items": {
+                "enum": ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM", "CAPABILITY_AUTO_EXPAND"],
+                "type": "string",
+                "uniqueItems": true
+            }
+        },
+        "Parameters": {
+            "description": "AWS CloudFormation Stack Parameters.",
+            "type": "array",
+            "insertionOrder": false,
+            "items": {
+                "$ref" : "#/definitions/Parameter"
+            }
+        },
+        "Template": {
+            "type": "string"
+        },
+        "TemplateUrl": {
+            "type": "string"
+        },
+        "StackId": {
+            "type": "string"
+        },
+        "Output": {
+            "type": "string"
+        },
+        "Tags": {
+            "description": "An array of key-value pairs to apply to this resource.",
+            "type": "array",
+            "uniqueItems": true,
+            "insertionOrder": false,
+            "items": {
+                "$ref": "#/definitions/Tag"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "oneOf": [
+        {
+            "required": [
+                "AccountId",
+                "AssumeRoleName",
+                "StackName",
+                "Template"
+            ]
+        },
+        {
+            "required": [
+                "AccountId",
+                "AssumeRoleName",
+                "StackName",
+                "TemplateUrl"
+            ]
+        }
+    ],
+    "createOnlyProperties": [
+        "/properties/AccountId",
+        "/properties/StackName",
+        "/properties/AssumeRolePath",
+        "/properties/AssumeRoleName"
+    ],
+    "readOnlyProperties": [
+        "/properties/StackId",
+        "/properties/Output"
+    ],
+    "primaryIdentifier": [
+        "/properties/StackId"
+    ],
+    "handlers": {
+        "create": {
+            "permissions": ["sts:AssumeRole"],
+            "timeoutInMinutes": 300
+        },
+        "read": {
+            "permissions": ["sts:AssumeRole"]
+        },
+        "update": {
+            "permissions": ["sts:AssumeRole"],
+            "timeoutInMinutes": 300
+        },
+        "delete": {
+            "permissions": ["sts:AssumeRole"],
+            "timeoutInMinutes": 300
+        },
+        "list": {
+            "permissions": ["sts:AssumeRole"]
+        }
+    }
+}
