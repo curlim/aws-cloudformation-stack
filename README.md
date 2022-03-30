@@ -19,13 +19,19 @@ TestStack:
     StackName: myTestStack
     Template: |
         Description: myTestStack
+        Parameters:
+          TestParam:
+            Type: String
         Resources:
           DummyParameter:
             Type: AWS::SSM::Parameter
             Properties:
               Name: /test-stack/abc123
-              Value: abc123
+              Value: !Ref TestParam
               Type: String
+    Parameters:
+      - Key: TestParam
+        Value: abc123
     Tags:
       - Key: mycorp:CostCenter
         Value: ABC123
