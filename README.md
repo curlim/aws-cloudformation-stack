@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-## My Project
-
-TODO: Fill this README out!
-
-Be sure to:
-
-* Change the title in this README
-* Edit your repository description on GitHub
-=======
 # Cross-Account Cloudformation Stack Resource Provider
 
 This AWS CloudFormation resource provider implements the creation/update/delete of a AWS CloudFormation stack cross-account
@@ -57,7 +47,6 @@ The RPDK will automatically generate the correct resource model from the schema 
 > Please don't modify files under `target/generated-sources/rpdk`, as they will be automatically overwritten.
 
 The code uses [Lombok](https://projectlombok.org/), and [you may have to install IDE integrations](https://projectlombok.org/setup/overview) to enable auto-complete for Lombok-annotated classes.
->>>>>>> b623d1b (initial commit)
 
 ## Security
 
@@ -66,7 +55,4 @@ See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more inform
 ## License
 
 This library is licensed under the MIT-0 License. See the LICENSE file.
-<<<<<<< HEAD
 
-=======
->>>>>>> b623d1b (initial commit)
