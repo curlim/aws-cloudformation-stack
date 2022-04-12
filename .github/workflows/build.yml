@@ -22,6 +22,12 @@ jobs:
         python-version: '3.x'
         architecture: 'x64'
     - run: pip install cloudformation-cli-java-plugin boto3
+    - uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
     - run: echo "Building with Java version - $(java -version)"
     - run: mvn package
     - run: cfn submit --dry-run
