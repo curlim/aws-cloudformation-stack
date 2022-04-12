@@ -26,6 +26,6 @@ if __name__ == '__main__':
 
 	bucket.upload_file(
 		Filename="quickstart/cfn-provider-registration.yaml",
-		Key=f"{env}/{prefix}/cfn-provider-registration.yaml"
+		Key=f"release/{prefix}/cfn-provider-registration.yaml"
 	)
 
