@@ -17,7 +17,8 @@ if __name__ == '__main__':
 	s3_client = boto3.client("s3")
 	s3 = boto3.resource("s3")
 	bucket = s3.Bucket(BUCKET_NAME)
-	key = f"proserve-cloudformation-stack/{version}.zip" if env == "release" else f"{env}/proserve-cloudformation-stack/{version}.zip"
+	prefix = "aws-cloudformation-stack-resource"
+	key = f"{prefix}/{version}.zip" if env == "release" else f"{env}/{prefix}/{version}.zip"
 	bucket.upload_file(
 		Filename="proserve-cloudformation-stack.zip",
 		Key=key

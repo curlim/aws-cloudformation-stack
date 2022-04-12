@@ -3,13 +3,13 @@ Description: Registers the latest version of the ProServe::CloudFormation::Stack
 Parameters:
   SourceBucketName:
     Type: String
-    Default: aws-enterprise-jumpstart
+    Default: curlim
   SourceBucketPrefix:
     Type: String
-    Default: aws-cloudformation-stack-resource/proserve-cloudformation-stack-
+    Default: aws-cloudformation-stack-resource/
   Version:
     Type: String
-    Default: v1.0.5
+    Default: v2.0.0
 Resources:
   CfnLogAndMetricsDeliveryRole:
     Type: AWS::IAM::Role
@@ -69,7 +69,7 @@ Resources:
     Type: AWS::CloudFormation::ResourceVersion
     Properties:
       ExecutionRoleArn: !GetAtt CfnResourceProviderExecutionRole.Arn
-      SchemaHandlerPackage: !Sub s3://${SourceBucketName}/${SourceBucketPrefix}${Version}.zip
+      SchemaHandlerPackage: !Sub s3://${SourceBucketName}/${SourceBucketPrefix}/${Version}.zip
       TypeName: ProServe::CloudFormation::Stack
       LoggingConfig:
           LogGroupName: !Ref CfnResourceLogGroup
