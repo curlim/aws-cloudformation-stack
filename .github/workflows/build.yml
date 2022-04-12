@@ -1,4 +1,4 @@
-name: Mirror to CC
+name: Build and deploy CFN resource provider
 on: [push]
 jobs:
   mirror-to-cc:
