@@ -6,10 +6,10 @@ Parameters:
     Default: curlim
   SourceBucketPrefix:
     Type: String
-    Default: aws-cloudformation-stack-resource/
+    Default: release/aws-cloudformation-stack-resource
   Version:
     Type: String
-    Default: v2.0.1
+    Default: v2.0.2
 Resources:
   CfnLogAndMetricsDeliveryRole:
     Type: AWS::IAM::Role
