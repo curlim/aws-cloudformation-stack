@@ -8,7 +8,7 @@ if __name__ == '__main__':
 	if ref[1] != 'tags':
 		print("non tagged ref")
 		return
-	else
+	else:
 		version = ref[2]
 	print(f"upload version {version} s3")
 	s3_client = boto3.client("s3")
@@ -16,6 +16,6 @@ if __name__ == '__main__':
 	bucket = s3.Bucket(BUCKET_NAME)
 	bucket.upload_file(
 		Filename="proserve-cloudformation-stack.zip",
-		Key="proserve-cloudformation-stack.zip"
+		Key=f"proserve-cloudformation-stack/{version}.zip"
 	)
 
