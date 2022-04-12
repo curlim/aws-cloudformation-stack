@@ -13,11 +13,12 @@ jobs:
         distribution: 'adopt'
         java-version: '8'
         cache: 'maven'
-    - run: pip install cloudformation-cli-java-plugin cfn-flip
-    - run: mvn package
-    - run: cfn submit --dry-run
     - uses: actions/setup-python@v3
       with:
         python-version: '3.x'
         architecture: 'x64'
+    - run: pip install cloudformation-cli-java-plugin cfn-flip
+    - run: echo "Building with Java version - $(java -version)"
+    - run: mvn package
+    - run: cfn submit --dry-run
     - run: python deployment/upload_s3.py
