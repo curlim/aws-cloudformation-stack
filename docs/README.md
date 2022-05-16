@@ -13,6 +13,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
     "Type" : "ProServe::CloudFormation::Stack",
     "Properties" : {
         "<a href="#accountid" title="AccountId">AccountId</a>" : <i>String</i>,
+        "<a href="#region" title="Region">Region</a>" : <i>String</i>,
         "<a href="#assumerolepath" title="AssumeRolePath">AssumeRolePath</a>" : <i>String</i>,
         "<a href="#assumerolename" title="AssumeRoleName">AssumeRoleName</a>" : <i>String</i>,
         "<a href="#stackname" title="StackName">StackName</a>" : <i>String</i>,
@@ -31,6 +32,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 Type: ProServe::CloudFormation::Stack
 Properties:
     <a href="#accountid" title="AccountId">AccountId</a>: <i>String</i>
+    <a href="#region" title="Region">Region</a>: <i>String</i>
     <a href="#assumerolepath" title="AssumeRolePath">AssumeRolePath</a>: <i>String</i>
     <a href="#assumerolename" title="AssumeRoleName">AssumeRoleName</a>: <i>String</i>
     <a href="#stackname" title="StackName">StackName</a>: <i>String</i>
@@ -55,6 +57,18 @@ _Type_: String
 _Pattern_: <code>^[0-9]{12}$</code>
 
 _Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
+
+#### Region
+
+AWS Region the Cfn stack should be deployed into
+
+_Required_: No
+
+_Type_: String
+
+_Pattern_: <code>^[a-zA-Z0-9-]{0,128}$</code>
+
+_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 
 #### AssumeRolePath
 

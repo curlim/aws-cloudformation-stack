@@ -37,12 +37,13 @@ public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
     final CallbackContext callbackContext,
     final Logger logger) {
     logger.log(request.getDesiredResourceState().toString());
+    final ResourceModel model = request.getDesiredResourceState();
 
     return handleRequest(
       proxy,
       request,
       callbackContext != null ? callbackContext : new CallbackContext(),
-      proxy.newProxy(ClientBuilder::getStsClient),
+      proxy.newProxy(() -> ClientBuilder.getStsClient(model.getRegion() != null ? model.getRegion() : request.getRegion())),
       logger
     );
   }
@@ -54,8 +55,8 @@ public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
     final ProxyClient<SdkClient> proxyClient,
     final Logger logger);
 
-  protected static AmazonWebServicesClientProxy retrieveCrossAccountProxy(AmazonWebServicesClientProxy proxy, LoggerProxy loggerProxy, String roleArn) {
-    ProxyClient<StsClient> proxyClient = proxy.newProxy(ClientBuilder::getStsClient);
+  protected static AmazonWebServicesClientProxy retrieveCrossAccountProxy(AmazonWebServicesClientProxy proxy, LoggerProxy loggerProxy, String roleArn, String region) {
+    ProxyClient<StsClient> proxyClient = proxy.newProxy(() -> ClientBuilder.getStsClient(region));
     AssumeRoleResponse assumeRoleResponse = proxyClient.injectCredentialsAndInvokeV2(
             createAssumeRoleRequest(roleArn),
             proxyClient.client()::assumeRole

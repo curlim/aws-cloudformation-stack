@@ -17,8 +17,21 @@ import software.amazon.awssdk.services.sts.StsClient;
 import software.amazon.cloudformation.LambdaWrapper;
 
 public class ClientBuilder {
-  public static StsClient getStsClient() {
-    return LazyHolder.STS_CLIENT;
+  public static StsClient getStsClient(String region) {
+    final Integer MAX_RETRIES = 10;
+
+    return StsClient.builder()
+            .httpClient(LambdaWrapper.HTTP_CLIENT)
+            .overrideConfiguration(ClientOverrideConfiguration.builder()
+                    .retryPolicy(RetryPolicy.builder()
+                            .backoffStrategy(BackoffStrategy.defaultThrottlingStrategy())
+                            .throttlingBackoffStrategy(BackoffStrategy.defaultThrottlingStrategy())
+                            .numRetries(MAX_RETRIES)
+                            .retryCondition(OrRetryCondition.create(RetryCondition.defaultRetryCondition(),
+                                    LazyHolder.ClientRetryCondition.create()))
+                            .build())
+                    .build())
+            .build();
   }
   public static CloudFormationClient getCloudFormationClient() {
     return LazyHolder.CFN_CLIENT;
@@ -29,21 +42,7 @@ public class ClientBuilder {
    * @return {@link StsClient}
    */
   private static class LazyHolder {
-
     private static final Integer MAX_RETRIES = 10;
-
-    public static StsClient STS_CLIENT = StsClient.builder()
-            .httpClient(LambdaWrapper.HTTP_CLIENT)
-            .overrideConfiguration(ClientOverrideConfiguration.builder()
-                    .retryPolicy(RetryPolicy.builder()
-                            .backoffStrategy(BackoffStrategy.defaultThrottlingStrategy())
-                            .throttlingBackoffStrategy(BackoffStrategy.defaultThrottlingStrategy())
-                            .numRetries(MAX_RETRIES)
-                            .retryCondition(OrRetryCondition.create(RetryCondition.defaultRetryCondition(),
-                                    ClientRetryCondition.create()))
-                            .build())
-                    .build())
-            .build();
 
     public static CloudFormationClient CFN_CLIENT = CloudFormationClient.builder()
             .httpClient(LambdaWrapper.HTTP_CLIENT)

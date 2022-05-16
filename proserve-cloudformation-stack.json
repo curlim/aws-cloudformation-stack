@@ -51,6 +51,11 @@
             "type": "string",
             "pattern": "^[0-9]{12}$"
         },
+        "Region": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{0,128}$",
+            "description": "AWS Region the Cfn stack should be deployed into"
+        },
         "AssumeRolePath": {
             "type": "string",
             "pattern": "^\/.*\/$"
