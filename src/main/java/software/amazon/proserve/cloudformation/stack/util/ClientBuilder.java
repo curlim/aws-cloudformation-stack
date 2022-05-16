@@ -22,6 +22,7 @@ public class ClientBuilder {
 
     return StsClient.builder()
             .httpClient(LambdaWrapper.HTTP_CLIENT)
+            .region(Region.of(region))
             .overrideConfiguration(ClientOverrideConfiguration.builder()
                     .retryPolicy(RetryPolicy.builder()
                             .backoffStrategy(BackoffStrategy.defaultThrottlingStrategy())
