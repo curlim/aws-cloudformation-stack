@@ -24,13 +24,14 @@ public class ReadHandler extends BaseHandlerStd {
         final ResourceModel model = request.getDesiredResourceState();
         final String rolePath = model.getAssumeRolePath() == null ? "" : model.getAssumeRolePath();
         final String roleArn = String.format("arn:aws:iam::%s:role/%s%s", model.getAccountId(), rolePath, model.getAssumeRoleName());
+        final String region = model.getRegion() != null ? model.getRegion() : request.getRegion();
         AmazonWebServicesClientProxy _proxy = retrieveCrossAccountProxy(
                 proxy,
                 (LoggerProxy) logger,
                 roleArn,
-                model.getRegion() != null ? model.getRegion() : request.getRegion()
+                region
         );
-        ProxyClient<CloudFormationClient> _proxyClient = _proxy.newProxy(ClientBuilder::getCloudFormationClient);
+        ProxyClient<CloudFormationClient> _proxyClient = _proxy.newProxy(() -> ClientBuilder.getCloudFormationClient(region));
         return ProgressEvent.progress(request.getDesiredResourceState(), callbackContext)
                 .then(progress -> describeStacks(_proxy, _proxyClient, progress, progress.getResourceModel(), logger, callbackContext))
                 .then(progress -> ProgressEvent.defaultSuccessHandler(progress.getResourceModel()));

@@ -34,8 +34,22 @@ public class ClientBuilder {
                     .build())
             .build();
   }
-  public static CloudFormationClient getCloudFormationClient() {
-    return LazyHolder.CFN_CLIENT;
+  public static CloudFormationClient getCloudFormationClient(String region) {
+    final Integer MAX_RETRIES = 10;
+
+    return CloudFormationClient.builder()
+            .httpClient(LambdaWrapper.HTTP_CLIENT)
+            .region(Region.of(region))
+            .overrideConfiguration(ClientOverrideConfiguration.builder()
+                    .retryPolicy(RetryPolicy.builder()
+                            .backoffStrategy(BackoffStrategy.defaultThrottlingStrategy())
+                            .throttlingBackoffStrategy(BackoffStrategy.defaultThrottlingStrategy())
+                            .numRetries(MAX_RETRIES)
+                            .retryCondition(OrRetryCondition.create(RetryCondition.defaultRetryCondition(),
+                                    LazyHolder.ClientRetryCondition.create()))
+                            .build())
+                    .build())
+            .build();
   }
   /**
    * Get OrganizationsClient for requests to interact with SC client
@@ -43,20 +57,6 @@ public class ClientBuilder {
    * @return {@link StsClient}
    */
   private static class LazyHolder {
-    private static final Integer MAX_RETRIES = 10;
-
-    public static CloudFormationClient CFN_CLIENT = CloudFormationClient.builder()
-            .httpClient(LambdaWrapper.HTTP_CLIENT)
-            .overrideConfiguration(ClientOverrideConfiguration.builder()
-                    .retryPolicy(RetryPolicy.builder()
-                            .backoffStrategy(BackoffStrategy.defaultThrottlingStrategy())
-                            .throttlingBackoffStrategy(BackoffStrategy.defaultThrottlingStrategy())
-                            .numRetries(MAX_RETRIES)
-                            .retryCondition(OrRetryCondition.create(RetryCondition.defaultRetryCondition(),
-                                    ClientRetryCondition.create()))
-                            .build())
-                    .build())
-            .build();
 
     /**
      * Client Throttling Exception StatusCode is 400 while default throttling code is 429
