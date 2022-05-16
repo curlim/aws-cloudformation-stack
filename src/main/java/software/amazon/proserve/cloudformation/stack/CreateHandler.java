@@ -23,7 +23,8 @@ public class CreateHandler extends BaseHandlerStd {
         AmazonWebServicesClientProxy _proxy = retrieveCrossAccountProxy(
                 proxy,
                 (LoggerProxy) logger,
-                roleArn
+                roleArn,
+                model.getRegion() != null ? model.getRegion() : request.getRegion()
         );
         ProxyClient<CloudFormationClient> _proxyClient = _proxy.newProxy(ClientBuilder::getCloudFormationClient);
         return ProgressEvent.progress(request.getDesiredResourceState(), callbackContext)
