@@ -1,7 +1,7 @@
 {
     "typeName": "ProServe::CloudFormation::Stack",
     "description": "Resource schema for cross-account stack deployments.",
-    "sourceUrl": "https://github.com/curlim/aws-cloudformation-stack.git",
+    "sourceUrl": "https://github.com/drandrel/aws-cloudformation-stack.git",
     "definitions": {
         "Tag": {
             "description": "A key-value pair to associate with a resource.",
@@ -95,6 +95,9 @@
         "Output": {
             "type": "string"
         },
+        "ExposedOutputs": {
+            "type": "string"
+        },
         "Tags": {
             "description": "An array of key-value pairs to apply to this resource.",
             "type": "array",
@@ -112,7 +115,8 @@
                 "AccountId",
                 "AssumeRoleName",
                 "StackName",
-                "Template"
+                "Template",
+                "ExposedOutputs"
             ]
         },
         {
@@ -120,7 +124,8 @@
                 "AccountId",
                 "AssumeRoleName",
                 "StackName",
-                "TemplateUrl"
+                "TemplateUrl",
+                "ExposedOutputs"
             ]
         }
     ],
@@ -128,22 +133,29 @@
         "/properties/AccountId",
         "/properties/StackName",
         "/properties/AssumeRolePath",
-        "/properties/AssumeRoleName"
+        "/properties/AssumeRoleName",
+        "/properties/Output",
+        "/properties/ExposedOutputs"
     ],
     "readOnlyProperties": [
-        "/properties/StackId",
-        "/properties/Output"
+        "/properties/StackId"
+    ],
+    "additionalIdentifiers": [
+        [
+            "/properties/ExposedOutputs",
+            "/properties/Output"
+        ]
     ],
     "primaryIdentifier": [
         "/properties/StackId"
     ],
     "handlers": {
         "create": {
-            "permissions": ["sts:AssumeRole"],
+            "permissions": ["sts:AssumeRole", "cloudformation:DescribeStackResource", "cloudformation:GetTemplateSummary", "cloudformation:DescribeType"],
             "timeoutInMinutes": 300
         },
         "read": {
-            "permissions": ["sts:AssumeRole"]
+            "permissions": ["sts:AssumeRole", "cloudformation:DescribeStackResource", "cloudformation:DescribeStackResource", "cloudformation:DescribeType"]
         },
         "update": {
             "permissions": ["sts:AssumeRole"],
@@ -154,7 +166,7 @@
             "timeoutInMinutes": 300
         },
         "list": {
-            "permissions": ["sts:AssumeRole"]
+            "permissions": ["sts:AssumeRole", "cloudformation:DescribeStackResource", "cloudformation:DescribeStackResource", "cloudformation:ListTypes", "cloudformation:ListTypeVersions"]
         }
     }
 }

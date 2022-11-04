@@ -74,6 +74,7 @@ Resources:
       LoggingConfig:
           LogGroupName: !Ref CfnResourceLogGroup
           LogRoleArn: !GetAtt CfnLogAndMetricsDeliveryRole.Arn
+
   CfnResourceProviderDefaultVersion:
     Type: AWS::CloudFormation::ResourceDefaultVersion
     Properties:

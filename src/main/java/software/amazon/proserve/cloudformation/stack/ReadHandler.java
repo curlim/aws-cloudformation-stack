@@ -22,9 +22,15 @@ public class ReadHandler extends BaseHandlerStd {
 
         this.logger = logger;
         final ResourceModel model = request.getDesiredResourceState();
+        /** for some reason the role and accountIid and region was not been fetched in the READ call, so for testing I actually made it statically defined
+         final String rolePath = "CloudformationAdminRole";
+         final String region = "eu-central-1";
+        */
         final String rolePath = model.getAssumeRolePath() == null ? "" : model.getAssumeRolePath();
         final String roleArn = String.format("arn:aws:iam::%s:role/%s%s", model.getAccountId(), rolePath, model.getAssumeRoleName());
         final String region = model.getRegion() != null ? model.getRegion() : request.getRegion();
+
+
         AmazonWebServicesClientProxy _proxy = retrieveCrossAccountProxy(
                 proxy,
                 (LoggerProxy) logger,
@@ -35,5 +41,7 @@ public class ReadHandler extends BaseHandlerStd {
         return ProgressEvent.progress(request.getDesiredResourceState(), callbackContext)
                 .then(progress -> describeStacks(_proxy, _proxyClient, progress, progress.getResourceModel(), logger, callbackContext))
                 .then(progress -> ProgressEvent.defaultSuccessHandler(progress.getResourceModel()));
+
+
     }
 }

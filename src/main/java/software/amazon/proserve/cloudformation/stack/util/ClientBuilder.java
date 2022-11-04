@@ -45,7 +45,7 @@ public class ClientBuilder {
                             .backoffStrategy(BackoffStrategy.defaultThrottlingStrategy())
                             .throttlingBackoffStrategy(BackoffStrategy.defaultThrottlingStrategy())
                             .numRetries(MAX_RETRIES)
-                            .retryCondition(OrRetryCondition.create(RetryCondition.defaultRetryCondition(),
+                             .retryCondition(OrRetryCondition.create(RetryCondition.defaultRetryCondition(),
                                     LazyHolder.ClientRetryCondition.create()))
                             .build())
                     .build())
