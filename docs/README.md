@@ -21,6 +21,8 @@ To declare this entity in your AWS CloudFormation template, use the following sy
         "<a href="#parameters" title="Parameters">Parameters</a>" : <i>[ <a href="parameter.md">Parameter</a>, ... ]</i>,
         "<a href="#template" title="Template">Template</a>" : <i>String</i>,
         "<a href="#templateurl" title="TemplateUrl">TemplateUrl</a>" : <i>String</i>,
+        "<a href="#output" title="Output">Output</a>" : <i>String</i>,
+        "<a href="#exposedoutputs" title="ExposedOutputs">ExposedOutputs</a>" : <i>String</i>,
         "<a href="#tags" title="Tags">Tags</a>" : <i>[ <a href="tag.md">Tag</a>, ... ]</i>
     }
 }
@@ -42,6 +44,8 @@ Properties:
       - <a href="parameter.md">Parameter</a></i>
     <a href="#template" title="Template">Template</a>: <i>String</i>
     <a href="#templateurl" title="TemplateUrl">TemplateUrl</a>: <i>String</i>
+    <a href="#output" title="Output">Output</a>: <i>String</i>
+    <a href="#exposedoutputs" title="ExposedOutputs">ExposedOutputs</a>: <i>String</i>
     <a href="#tags" title="Tags">Tags</a>: <i>
       - <a href="tag.md">Tag</a></i>
 </pre>
@@ -132,6 +136,22 @@ _Type_: String
 
 _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 
+#### Output
+
+_Required_: No
+
+_Type_: String
+
+_Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
+
+#### ExposedOutputs
+
+_Required_: No
+
+_Type_: String
+
+_Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
+
 #### Tags
 
 An array of key-value pairs to apply to this resource.
@@ -157,8 +177,4 @@ For more information about using the `Fn::GetAtt` intrinsic function, see [Fn::G
 #### StackId
 
 Returns the <code>StackId</code> value.
-
-#### Output
-
-Returns the <code>Output</code> value.
 

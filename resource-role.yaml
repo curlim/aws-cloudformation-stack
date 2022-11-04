@@ -30,6 +30,11 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                - "cloudformation:DescribeStackResource"
+                - "cloudformation:DescribeType"
+                - "cloudformation:GetTemplateSummary"
+                - "cloudformation:ListTypeVersions"
+                - "cloudformation:ListTypes"
                 - "sts:AssumeRole"
                 Resource: "*"
 Outputs:

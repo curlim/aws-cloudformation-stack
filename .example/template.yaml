@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  Identifier:
+    Type: String
+    Default: LogGroupTestV1
+  ExposedOutputs:
+    Type: String
+    Default: MyTestOutput,MyTestOutput2
+Resources:
+  VpcStack:
+    Type: ProServe::CloudFormation::Stack
+    Properties:
+      AccountId: 847308954619
+      Region: eu-central-1
+      AssumeRoleName: CloudformationAdminRole
+      StackName: LogGroupTestP
+      ExposedOutputs: MyOutputTest
+      Template: | 
+          AWSTemplateFormatVersion: 2010-09-09
+          Parameters:
+            MyLogGroupName:
+              Type: String
+            ExposedOutputs:
+              Type: String
+          Resources:
+            MyNestedLogGroup:
+              Type: AWS::Logs::LogGroup
+              Properties:
+                LogGroupName: !Ref MyLogGroupName
+          Outputs:
+            MyOutputTest:
+              Value: !Ref MyNestedLogGroup
+      Parameters:
+        - Key: MyLogGroupName
+          Value:
+            Ref: Identifier
+        - Key: ExposedOutputs
+          Value: LeroLero
+    Metadata:
+      SamResourceId: VpcStack

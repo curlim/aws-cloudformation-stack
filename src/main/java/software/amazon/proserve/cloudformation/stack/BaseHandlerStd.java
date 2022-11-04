@@ -36,7 +36,7 @@ public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
     final ResourceHandlerRequest<ResourceModel> request,
     final CallbackContext callbackContext,
     final Logger logger) {
-    logger.log(request.getDesiredResourceState().toString());
+    logger.log(String.format("BASEHANDLER desiredState [%s]", request.getDesiredResourceState().toString()));
     final ResourceModel model = request.getDesiredResourceState();
 
     return handleRequest(
@@ -57,6 +57,7 @@ public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
 
   protected static AmazonWebServicesClientProxy retrieveCrossAccountProxy(AmazonWebServicesClientProxy proxy, LoggerProxy loggerProxy, String roleArn, String region) {
     ProxyClient<StsClient> proxyClient = proxy.newProxy(() -> ClientBuilder.getStsClient(region));
+
     AssumeRoleResponse assumeRoleResponse = proxyClient.injectCredentialsAndInvokeV2(
             createAssumeRoleRequest(roleArn),
             proxyClient.client()::assumeRole
@@ -87,15 +88,16 @@ public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
             .makeServiceCall((modelRequest, proxyInvocation) -> {
               final CreateStackResponse response = proxyInvocation.injectCredentialsAndInvokeV2(modelRequest, proxyInvocation.client()::createStack);
               logger.log(String.format("[%s] stack creation initiated", response.stackId()));
+
               return response;
             })
             .stabilize((_request, response, proxyInvocation, resourceModel, context) -> {
               resourceModel.setStackId(response.stackId());
               //TODO: set outputs and tags
-              resourceModel.setOutput("");
               return isOperationStabilized(proxyInvocation, resourceModel, logger);
             })
             .progress();
+
   }
 
   protected ProgressEvent<ResourceModel, CallbackContext> updateStack(
@@ -114,7 +116,9 @@ public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
             .stabilize((_request, response, proxyInvocation, resourceModel, context) -> {
               resourceModel.setStackId(response.stackId());
               //TODO: set outputs and tags
-              resourceModel.setOutput("");
+              resourceModel.setOutput("UPDATE_STACK_OUTPUT");
+              resourceModel.setExposedOutputs("UPDATE_STACK_EXPOSED_OUTPUT");
+              logger.log(String.format("UPDATESTACK resource [%s]", resourceModel));
               return isOperationStabilized(proxyInvocation, resourceModel, logger);
             })
             .handleError((_request, e, _proxyClient, _model, context) -> {
@@ -126,6 +130,8 @@ public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
             })
             .progress();
   }
+
+
 
   protected ProgressEvent<ResourceModel, CallbackContext> deleteStack(
           final AmazonWebServicesClientProxy proxy,
@@ -144,6 +150,9 @@ public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
             .progress();
   }
 
+
+
+
   protected ProgressEvent<ResourceModel, CallbackContext> describeStacks(
           final AmazonWebServicesClientProxy proxy,
           final ProxyClient<CloudFormationClient> proxyClient,
@@ -152,6 +161,8 @@ public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
           final Logger logger,
           final CallbackContext ctx
   ) {
+
+
     return proxy
             .initiate("ProServe-CloudFormation-Stack::DescribeStack", proxyClient, model, progress.getCallbackContext())
             .translateToServiceRequest(Translator::translateToDescribeStack)
@@ -160,7 +171,9 @@ public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
             .stabilize((_request, response, proxyInvocation, resourceModel, context) -> {
 //              resourceModel.setStackId(response.stackId());
               //TODO: set outputs and tags
-              resourceModel.setOutput("");
+              //resourceModel.setOutput("TESTOUT");
+              logger.log(String.format("DESCRIBESTACK resourceModel [%s], model [%s]", resourceModel.toString(), model.toString()));
+              //model.setOutput(resourceModel.getOutput());
               return true;
             })
             .progress();
@@ -191,19 +204,20 @@ public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
 
     final Stack stack = describeStack(proxyClient, model, logger);
     final boolean isSucceeded = isStackSucceeded(stack, logger);
+    final List<Parameter> params = model.getParameters();
 
-//    if (isSucceeded && recordDetail.recordType().compareTo("TERMINATE_PROVISIONED_PRODUCT") != 0) {
-//      Map<String, String> outputs = translateFromSdkOutputs(getProvisionedProductOutputs(proxyClient, model));
-//
-//      model.setOutputs(outputs);
-//      List<RecordTag> tags = recordDetail.recordTags() == null ? new LinkedList<>() : recordDetail.recordTags();
-//      Optional<RecordTag> cfnOutputKeyTag = tags.stream().filter(tag -> tag.key().compareTo("proserve:CfnOutputKey") == 0).findFirst();
-//      String outputValue = cfnOutputKeyTag.isPresent() ? Objects.requireNonNull(outputs).get(cfnOutputKeyTag.get().value()) : recordId;
-//      model.setOutputValue(outputValue);
-//    }
+    params.forEach(param -> {
+      logger.log(String.format("param value [%s:%s]", param.getKey(), param.getValue()));
+      if(param.getKey().equals("ExposedOutputs")) {
+        model.setExposedOutputs(param.getKey());
+      }
+    });
+    model.setOutput("TESTOUTPUT");
 
     return isSucceeded;
   }
+
+
 
   /**
    * Compares {@link software.amazon.awssdk.services.cloudformation.model.StackStatus} with specific statuses
